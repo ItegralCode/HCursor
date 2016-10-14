@@ -1,30 +1,7 @@
-Visual Basic:
-  type: programming
-  color: "#945db7"
-  extensions:
-  - ".vb"
-  - ".bas"
-  - ".cls"
-  - ".frm"
-  - ".frx"
-  - ".vba"
-  - ".vbhtml"
-  - ".vbs"
-  tm_scope: source.vbnet
-  aliases:
-  - vb.net
-  - vbnet
-  ace_mode: text
-  codemirror_mode: vb
-  codemirror_mime_type: text/x-vb
-  language_id: 389
-  
-require 'linguist'
-```vbnet
-
 Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
 Public Structure [HCURSOR]
+```
 #Region "API needs"
     ' Necessary API additions to carry out the needed tasks.
     <DllImport("user32.dll")>
@@ -52,6 +29,7 @@ Public Structure [HCURSOR]
     ' Cursor's constant state, compare this value with the Flag of the Cursor's Handle to determine if the Cursor is showing. 
     Private Const CURSOR_SHOWING As Int32 = 1
 #End Region
+```
     ' All standard System Cursors to reference when parsing their IntPtr to their reference Name.
     Private Shared ReadOnly HCURSORHANDLES As New [Dictionary](Of [IntPtr], [String]) From
            {{[Cursors].AppStarting.Handle, "AppStarting"},
