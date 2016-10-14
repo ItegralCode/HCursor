@@ -19,6 +19,8 @@ Visual Basic:
   codemirror_mime_type: text/x-vb
   language_id: 389
   
+```vbnet
+
 Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
 Public Structure [HCURSOR]
@@ -183,3 +185,4 @@ Public Structure [HCURSOR]
         [HCURSOR].DETECTHCURSORCHANGE()
     End Sub
 End Structure
+```
