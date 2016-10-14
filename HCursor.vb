@@ -117,7 +117,7 @@ Public Structure [HCURSOR]
             Return [HPREVIOUSCURSOR]
         End Get
         Set(ByVal value As [IntPtr])
-            ' Sets the Previous Cursor to a given value. Should never be assigned by the user manually.
+            ' Sets the Previous Cursor to a given value. Should NEVER be assigned by the user manually.
             [HPREVIOUSCURSOR] = [value]
         End Set
     End Property
@@ -156,17 +156,37 @@ Public Structure [HCURSOR]
         If Not [HCURSOR].PreviousCursor = [HCURSOR].CurrentCursor Then [HCURSOR].PreviousCursor = [HCURSOR].CurrentCursor
     End Sub
     ' Internal timer that runs every 75ms to update Cursor information in background.
-    Public Shared CheckTimer As [Timer] = New [Timer] With {.Interval = 75, .Enabled = True}
+    Private Shared CheckTimer As [Timer] = New [Timer] With {.Interval = 75, .Enabled = True}
     Private Shared Sub CheckTimer_Tick(sender As Object, e As EventArgs)
         ' Call the [Sub] to refresh the Cursor's Handle data and check for Cursor Handle changes.
         [HCURSOR].DETECTHCURSORCHANGE()
     End Sub
+    Private Shared [HPREVIOUSLOCATION] As Drawing.[Point] = Nothing
+    ''' <summary>
+    ''' Gets the Cursor's Previous Location that it was manually set to.
+    ''' Should never be assigned by the user manually! Only the internal workings should Call this property to set the value.
+    ''' </summary>
+    Public Shared Property PreviousLocation() As Drawing.[Point]
+        Get
+            ' Return the last Location that was assigned.
+            Return If(Not [HPREVIOUSLOCATION] = Nothing, Nothing, [HPREVIOUSLOCATION])
+        End Get
+        Set(value As Drawing.[Point])
+            ' Sets the Cursor's Previous Location to a given value. Should NEVER be assigned by the user manually.
+            System.Windows.Forms.[Cursor].Position() = value
+        End Set
+    End Property
+    ''' <summary>
+    ''' Gets or Sets the Cursor's current Location globally.
+    ''' </summary>
     Public Shared Property CurrentLocation() As Drawing.[Point]
         Get
             ' Return Cursor's global Location
-            Return System.Windows.Forms.[Cursor].Position
+            Return System.Windows.Forms.[Cursor].Position()
         End Get
         Set(value As Drawing.[Point])
+            ' Sets the Cursor's Previous Location to the Location of the Cursor prior to it being manually changed.
+            PreviousLocation = CurrentLocation()
             ' Set the Cursor's global Location
             System.Windows.Forms.[Cursor].Position = value
         End Set
