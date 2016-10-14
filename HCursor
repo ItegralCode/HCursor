@@ -19,6 +19,7 @@ Visual Basic:
   codemirror_mime_type: text/x-vb
   language_id: 389
   
+require 'linguist'
 ```vbnet
 
 Imports System.Runtime.InteropServices
