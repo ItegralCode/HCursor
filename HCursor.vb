@@ -1,7 +1,6 @@
 Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
 Public Structure [HCURSOR]
-```
 #Region "API needs"
     ' Necessary API additions to carry out the needed tasks.
     <DllImport("user32.dll")>
@@ -29,7 +28,6 @@ Public Structure [HCURSOR]
     ' Cursor's constant state, compare this value with the Flag of the Cursor's Handle to determine if the Cursor is showing. 
     Private Const CURSOR_SHOWING As Int32 = 1
 #End Region
-```
     ' All standard System Cursors to reference when parsing their IntPtr to their reference Name.
     Private Shared ReadOnly HCURSORHANDLES As New [Dictionary](Of [IntPtr], [String]) From
            {{[Cursors].AppStarting.Handle, "AppStarting"},
@@ -106,12 +104,12 @@ Public Structure [HCURSOR]
         ' {Optional: May be carried out nearly just as easily with an external timer.}
         [HCURSOR].CheckTimer.Start()
     End Sub
-    Private Shared Function CursorNfo() As [IntPtr]
+    Private Shared Function CursorNfo() As [CURSORINFO]
         ' Getting the Cursor Info from the Cursor.
         Dim pci As [CURSORINFO] = New [CURSORINFO] With {.cbSize = [Marshal].SizeOf(GetType([CURSORINFO]))}
         GetCursorInfo(pci)
-        ' Returning the Cursor's IntPtr.
-        Return pci.hCursor
+        ' Returning the Cursor's CURSORINFO.
+        Return pci
     End Function
     Public Shared Property PreviousCursor() As [IntPtr]
         Get
@@ -132,7 +130,7 @@ Public Structure [HCURSOR]
     Public Shared ReadOnly Property CurrentCursor() As [IntPtr]
         Get
             ' Return the Current Cursor's IntPtr information.
-            Return CursorNfo()
+            Return CursorNfo().hCursor
         End Get
     End Property
     Public Shared ReadOnly Property CurrentCursorName() As [String]
@@ -159,9 +157,18 @@ Public Structure [HCURSOR]
     End Sub
     ' Internal timer that runs every 75ms to update Cursor information in background.
     Public Shared CheckTimer As [Timer] = New [Timer] With {.Interval = 75, .Enabled = True}
-    Public Shared Sub CheckTimer_Tick(sender As Object, e As EventArgs)
+    Private Shared Sub CheckTimer_Tick(sender As Object, e As EventArgs)
         ' Call the [Sub] to refresh the Cursor's Handle data and check for Cursor Handle changes.
         [HCURSOR].DETECTHCURSORCHANGE()
     End Sub
+    Public Shared Property CurrentLocation() As Drawing.[Point]
+        Get
+            ' Return Cursor's global Location
+            Return System.Windows.Forms.[Cursor].Position
+        End Get
+        Set(value As Drawing.[Point])
+            ' Set the Cursor's global Location
+            System.Windows.Forms.[Cursor].Position = value
+        End Set
+    End Property
 End Structure
-```
